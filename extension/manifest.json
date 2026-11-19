@@ -1,0 +1,22 @@
+{
+  "manifest_version": 3,
+  "name": "Studocu Unblur",
+  "version": "1.0.0",
+  "description": "Reveal client-side blurred Studocu document previews. All processing stays in your browser.",
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Studocu Unblur"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://*.studocu.com/*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "run_at": "document_idle",
+      "all_frames": true
+    }
+  ]
+}
