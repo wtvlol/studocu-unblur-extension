@@ -50,7 +50,13 @@
     observer.disconnect();
     const frames = [...document.querySelectorAll('#page-container .pf')];
     pages = frames.filter(frame => frame.querySelector('.pc')).length;
-    const relevant = new Set();
+    // The in-viewer upsell is outside .pf, so sibling-cover removal cannot reach it.
+    // Match component class suffixes rather than their changing build prefixes.
+    const banners = [...document.querySelectorAll('[class*="_inlineBannerWrapper"], [class*="_premiumBannerWrapper"]')].filter(el =>
+      [...el.classList].some(name => name.endsWith('_inlineBannerWrapper') || name.endsWith('_premiumBannerWrapper')) &&
+      el.querySelector('[class*="_previewBanner"]') &&
+      !el.querySelector('#page-container, .pf, .pc, iframe'));
+    const relevant = new Set(banners);
     for (const frame of frames) {
       const content = frame.querySelector('.pc');
       if (!content) continue;
@@ -78,6 +84,7 @@
         if (sibling !== content && !sibling.matches('.pc, style, link, script') && !sibling.querySelector('.pc')) set(sibling, 'display', 'none');
       }
     }
+    for (const banner of banners) set(banner, 'display', 'none');
     observe();
   }
   api.runtime.onMessage.addListener((message, _sender, respond) => {

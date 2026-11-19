@@ -2,7 +2,7 @@
 
 A small Chrome and Firefox extension that automatically removes CSS blur from loaded Studocu document previews. There is no toggle or setup: open a supported document and it runs. Click its toolbar icon to check preview status.
 
-It supports the `#page-container .pf .pc` viewer, including pages added as you scroll and viewers inside matching Studocu frames. It removes blur from content and affected wrappers, reveals hidden page containers, and hides sibling preview covers. Text positioning, other filters, images and unrelated page UI are preserved.
+It supports the `#page-container .pf .pc` viewer, including pages added as you scroll and viewers inside matching Studocu frames. It removes blur from content and affected wrappers, reveals hidden page containers, and hides sibling preview covers and the separate in-viewer Premium preview banner. Text positioning, other filters, images and unrelated page UI are preserved.
 
 Only content already supplied to your browser can be revealed. Missing pages and blur embedded in image pixels cannot be recovered. Site layout changes may require updated selectors. The status popup reports the responding frame's loaded page count, not total document coverage.
 

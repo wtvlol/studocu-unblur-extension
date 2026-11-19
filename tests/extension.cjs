@@ -65,6 +65,27 @@ test('observes lazy content, site reblurring and replacement viewers without a m
     assert.equal((await page.evaluate(() => window.previewStatus())).pages, 0);
   } finally { await page.close(); }
 });
+test('hides late in-viewer preview banners without hiding document pages or unrelated dialogs', async () => {
+  const page = await setup();
+  try {
+    await page.evaluate(() => {
+      document.body.insertAdjacentHTML('beforeend', `
+        <div id="upsell" class="hash_inlineBannerWrapper banner-wrapper"><div class="hash_previewBanner hash_inViewer"><p>This is a preview</p><button>Free Trial</button></div></div>
+        <div id="floating" class="hidden-on-mobile hash_premiumBannerWrapper"><div class="hash_previewBanner">This is a preview</div></div>
+        <div id="dialog" role="dialog">Sign in</div>
+        <div id="other" class="banner-wrapper"><div class="hash_previewBanner">News</div></div>
+        <div id="unsafe" class="hash_inlineBannerWrapper banner-wrapper"><div class="hash_previewBanner hash_inViewer"></div><div class="pc">Document content</div></div>`);
+    });
+    await page.waitForFunction(() => getComputedStyle(document.querySelector('#upsell')).display === 'none');
+    assert.equal(await page.locator('#floating').evaluate(el => getComputedStyle(el).display), 'none');
+    assert.equal(await page.locator('#dialog').evaluate(el => getComputedStyle(el).display), 'block');
+    assert.equal(await page.locator('#other').evaluate(el => getComputedStyle(el).display), 'block');
+    assert.equal(await page.locator('#unsafe').evaluate(el => getComputedStyle(el).display), 'block');
+    assert.equal(await page.locator('.pf .pc').evaluate(el => getComputedStyle(el).display), 'block');
+    await page.evaluate(() => document.querySelector('#upsell').className = 'ordinary');
+    await page.waitForFunction(() => getComputedStyle(document.querySelector('#upsell')).display === 'block');
+  } finally { await page.close(); }
+});
 test('packages contain only runtime files and correct browser metadata', () => {
   execFileSync(process.execPath, ['scripts/build.cjs']);
   for (const name of ['chrome','firefox']) {

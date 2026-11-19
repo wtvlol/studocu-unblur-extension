@@ -1,6 +1,6 @@
 {
   "name": "studocu-unblur-extension",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "description": "Remove CSS blur from loaded Studocu previews in Chrome and Firefox",
   "engines": {
